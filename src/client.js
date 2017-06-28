@@ -96,7 +96,15 @@ FTPClient.prototype.connect = function () {
     this.logger.debug([ '[ FTPClient.on.ready ] -',
       'Connection succeed on',
         this.options.host, 'with options :',
-          utils.obj.inspect(this.options), 'for connection :', this.name
+          utils.obj.inspect(_.map(this.options, function (option, key) {
+            // this key is user or password ?
+            if (_.includes([ 'user', 'password' ], key)) {
+              // replace the value for the current log
+              option = _.repeat('*', option.length);
+            }
+            // default statement
+            return _.set({}, key, option);
+          })), 'for connection :', this.name
     ].join(' '));
 
     // change connected value

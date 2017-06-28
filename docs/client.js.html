@@ -142,7 +142,15 @@ FTPClient.prototype.connect = function () {
     this.logger.debug([ '[ FTPClient.on.ready ] -',
       'Connection succeed on',
         this.options.host, 'with options :',
-          utils.obj.inspect(this.options), 'for connection :', this.name
+          utils.obj.inspect(_.map(this.options, function (option, key) {
+            // this key is user or password ?
+            if (_.includes([ 'user', 'password' ], key)) {
+              // replace the value for the current log
+              option = _.repeat('*', option.length);
+            }
+            // default statement
+            return _.set({}, key, option);
+          })), 'for connection :', this.name
     ].join(' '));
 
     // change connected value
@@ -401,7 +409,7 @@ module.exports = FTPClient;
 
 <br class="clear">
 
-<footer>Documentation for application <b>yocto-ftp<b> was generated at Wed Jun 28 2017 11:49:56 GMT+0400 (+04) with <a href='https://www.npmjs.com/package/yoctodoc'>yocto-doc</a> module - Copyright Yocto © 2017</footer>
+<footer>Documentation for application <b>yocto-ftp<b> was generated at Wed Jun 28 2017 15:33:07 GMT+0400 (+04) with <a href='https://www.npmjs.com/package/yoctodoc'>yocto-doc</a> module - Copyright Yocto © 2017</footer>
 
 <script>prettyPrint();</script>
 <script src="scripts/linenumber.js"></script>
