@@ -61,4 +61,7 @@ YFtp.prototype.createConnection = function (options, name) {
 };
 
 // Default export
-module.exports = new YFtp(logger);
+module.exports = function (clogger) {
+  // default statement
+  return new YFtp(clogger || logger);
+};

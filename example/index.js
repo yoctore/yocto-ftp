@@ -1,6 +1,6 @@
 'use strict';
 
-var ftp   = require('../src/');
+var ftp   = require('../src/')();
 var path  = require('path');
 var fs    = require('fs');
 
