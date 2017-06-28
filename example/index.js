@@ -5,7 +5,11 @@ var path  = require('path');
 var fs    = require('fs');
 
 // create new single connection
-var connection = ftp.createConnection({ host : 'ftp.dlptest.com', user : 'dlpuser@dlptest.com', password : 'KZhfl2N53lsZM7E8' });
+var connection = ftp.createConnection({
+  host      : process.env.FTP_HOST || 'ftp.dlptest.com',
+  user      : process.env.FTP_USER || 'dlpuser@dlptest.com',
+  password  : process.env.FTP_PASSWORD || 'KZhfl2N53lsZM7E8'
+});
 
 // source
 var sourcePath  = 'example';
@@ -15,8 +19,8 @@ var filename    = 'test.txt';
 var filePath    = path.normalize([ process.cwd(), sourcePath, filename ].join('/'));
 var destination = 'destination.txt';
 var isFile = true;
-var fast   = true;
-
+var fast   = false;
+var put    = false;
 
 /**
  * We can here catch the progress event during upload.
@@ -33,16 +37,20 @@ if (!fast) {
   // is connected ?
   connection.connect().then(function () {
     console.log('connected');
-    // try to put data
-    connection.put(isFile ? filePath : fs.readFileSync(filePath).toString(), destination).then(function () {
-      
-    }).catch(function (error) {
-      /**
-       * You can choose between hard disconnect ant gracefull disconnect
-       */
-      //connection.hardDisconnect();
-      connection.gracefullDisconnect();
-    });
+    if (put) {
+      // try to put data
+      connection.put(isFile ? filePath : fs.readFileSync(filePath).toString(), destination).then(function () {
+        
+      }).catch(function (error) {
+        /**
+         * You can choose between hard disconnect ant gracefull disconnect
+         */
+        //connection.hardDisconnect();
+        connection.gracefullDisconnect();
+      });
+    } else {
+      connection.gracefullDisconnect();      
+    }
   }).catch(function (error) {
     console.log('connect error :', error);
   });
@@ -51,9 +59,11 @@ if (!fast) {
    * He will be the single mode.
    * This method do : connect, put, disconnect 
    */
-  connection.fastPut(isFile ? filePath : fs.readFileSync(filePath).toString(), destination).then(function () {
-    console.log('fast put success');
-  }).catch(function (error) {
-    console.log('fast put error : ', error);
-  });
+  if (put) {
+    connection.fastPut(isFile ? filePath : fs.readFileSync(filePath).toString(), destination).then(function () {
+      console.log('fast put success');
+    }).catch(function (error) {
+      console.log('fast put error : ', error);
+    }); 
+  }
 }
