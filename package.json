@@ -1,6 +1,6 @@
 {
   "name": "yocto-ftp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manage FTP connection on FTP Server",
   "scripts": {
     "test": "grunt test"
